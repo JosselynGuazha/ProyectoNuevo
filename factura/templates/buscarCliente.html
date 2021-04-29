@@ -1,0 +1,107 @@
+{% extends 'home.html' %}
+{% block content %}
+{% load static %}
+
+<!-- Content Wrapper. Contains page content -->
+
+<div class="content">
+    <div class="container-center">
+        <h2 class="text-center display-4">Buscar Cliente</h2>
+        <form method="GET" action="{% url 'buscarCliente' %}">
+            <div class="row">
+                <div class="col-md-10 offset-md-1">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label class="form-label" for="tipoIdentificacion">Identificación</label>
+                                <select name="tipoIdentificacion" id="tipoIdentificacion" style="width: 100%;">
+                                    <option value="TODOS">TODOS</option>
+                                    <option value="CEDULA">CI</option>
+                                    <option value="RUC">RUC</option>
+                                    <option value="PASAPORTE">PASAPORTE</option>
+                                    <option value="IDENTIFICACION DEL EXTERIOR">IDENTIFICACION DEL EXTERIOR</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="identificacion">Número de Identificación </label>
+                        <div class="input-group input-group-lg">
+                            <input type="search" class="form-control form-control-lg"
+                                placeholder="Type your keywords here" id="identificacion" name="identificacion">
+
+                            <div class="input-group-append">
+
+                                <button type="submit" class="btn btn-lg btn-default">
+                                    <i class="fa fa-search"></i>
+
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<br>
+{% if messages %}
+<div class="row">
+    <div class="col-sm-4">
+        {% for message in messages %}
+        <p class="alert alert-success"> {{ message }} </p>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+{% if data %}
+<div class="container">
+    <div class="abs-center">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Clientes</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Apellidos y Nombres/Razón Social</th>
+                                <th>Tipo de identificación</th>
+                                <th>Número de Identificación</th>
+                                <th>Tipo Cliente</th>
+                                <th style="width: 40px">Actualizar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ data.razonSocial }}</td>
+                                <td>{{ data.tipoIdentificacion }}</td>
+                                <td>{{ data.identificacion }}</td>
+                                <td>{{ data.tipoCliente }}</td>
+                                <td>
+                                    <!-- Button ir a modificar -->
+                                    <a href="{% url 'modificarCliente' id=data.id %}"
+                                        class="btn btn-info btn-sm">Modificar</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                        
+                    </table>
+                    {% else %}
+                        {% if message %}
+                        <h1>{{ message }}</h1>
+                        {% endif %}
+                        {% endif %}
+                </div>
+
+            </div>
+            <!-- /.card -->
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

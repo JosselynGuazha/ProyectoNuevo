@@ -1,0 +1,342 @@
+{% extends 'home.html' %}
+{% block content %}
+{% load static %}
+
+<!-- /.card -->
+<div class="container">
+    <div class="container">
+
+        <h1 style="text-align: center">Fcturación</h1>
+
+        <div class="abs-center">
+            <div class="row">
+                <div class="col-md-12">
+                    <form method="" class="post-form" enctype="multipart/form-data"> {% csrf_token %}
+                        <div class="card card-defa">
+
+                            <div class="card-header">
+                                <h3 class="card-title">Datos del Emisor</h3>
+                            </div>
+                            <div class="card-body">
+
+                                <!-- RUC -->
+                                <div class="row">
+                                    <div class="col">
+                                        <h6><b>RUC:</b></h6>
+                                    </div>
+                                    <div class="col">
+                                        <input type="text" id="ruc" class="form-control" value="{{ emisor.ruc }}"
+                                            readonly>
+                                    </div>
+                                </div>
+
+                                <!-- Tipo de identificacion-->
+                                <div class="form-group">
+                                    <label for="nombreComercial">Nombre Comercial </label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">#</span>
+                                        </div>
+                                        <input type="text" class="form-control" id="nombreComercial"
+                                            value="{{ emisor.nombreComercial }}" readonly>
+                                    </div>
+                                </div>
+
+
+                                <!-- Razon social -->
+                                <div class="form-group">
+                                    <label for="razonSocial">Apellidos y Nombres / Razón Social </label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">@</span>
+                                        </div>
+                                        <input type="text" id="razonSocial" class="form-control"
+                                            value="{{ emisor.razonSocial }}" readonly>
+                                    </div>
+                                </div>
+
+
+                                <!-- Tipo Cliente -->
+                                <div class="form-group">
+                                    <label for="contribuyenteEspecial">Contribuyente Especial </label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">@</span>
+                                        </div>
+                                        <input type="text" id="contribuyenteEspecial" class="form-control"
+                                            value="{{ emisor.contribuyenteEspecial }}" readonly>
+                                    </div>
+                                </div>
+
+                                <!-- Obligado a LLevar Contabilidad -->
+                                <div class="form-group">
+                                    <label for="obligadoContabilidad">Obligado a LLevar Contabilidad</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">@</span>
+                                        </div>
+                                        <input type="text" id="obligadoContabilidad" class="form-control"
+                                            value="{{ emisor.obligadoContabilidad }}" readonly>
+                                    </div>
+                                </div>
+
+
+                                <!-- Dirección Matriz -->
+                                <div class="form-group">
+                                    <label for="direccionMatriz">Dirección Matriz</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                        </div>
+                                        <input type="text" id="direccionMatriz" class="form-control"
+                                            value="{{ emisor.dirMatriz }}" readonly>
+                                    </div>
+                                </div>
+
+
+                                <!-- Dirección Estableciemitno -->
+                                <div class="form-group">
+                                    <label for="direccionEstablecimiento">Dirección Estableciemitno</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                        </div>
+                                        <input type="text" id="direccionEstablecimiento" class="form-control"
+                                            value="{{ emisor.dirEstablecimiento }}" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="abs-center">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="container">
+                        <div class="abs-center">
+                            <form method="POST" class="post-form" enctype="multipart/form-data"> {% csrf_token %}
+                                <div class="card card-info">
+
+                                    <div class="card-header">
+                                        <h3 class="card-title">Identificación del Comprobante</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <label for="numeroFactura">Nro. </label>
+                                                <input type="text" id="numeroFactura" class="form-control"
+                                                    value="{{ emisor.codDoc }} - {{ emisor.tipoDoc }} - {{ emisor.id }} "
+                                                    readonly>
+                                            </div>
+                                            <div class="col">
+                                                <label for="claveAcceso">Clave de Acceso</label>
+                                                <input type="text" class="form-control" id="claveAcceso"
+                                                    value="{{ emisor.claveAcc }}" readonly>
+                                            </div>
+                                        </div>
+                                        <label for="fecha">Fecha de Emisión</label>
+                                        <input type="date" class="form-control" class="form-control" id="fecha">
+                                        <br>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="card">
+    <div class="content">
+        <div class="container-center">
+            <h6 class="text-center display-4">Datos del Comprador</h6>
+            <form method="GET" action="{% url 'buscarCliente' %}">
+                <div class="row">
+                    <div class="col-md-10 offset-md-1">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label class="form-label" for="tipoIdentificacion">Identificación</label>
+                                    <select name="tipoIdentificacion" class="form-control" id="tipoIdentificacion">
+                                        <option value="05">Cedula</option>
+                                        <option value="06">Pasaporte</option>
+                                        <option value="07">Consumidor Final</option>
+                                        <option value="08">ID Exterior</option>
+                                        <option value="09">Placa</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="identificador">Número de Identificación </label>
+
+                            <div class="input-group input-group-lg">
+                                <input type="search" class="form-control form-control-lg" id="identificador"
+                                    name="identificador">
+
+                                <div class="input-group-append">
+
+                                    <button type="submit" class="btn btn-lg btn-default"><i
+                                            class="fa fa-search"></i></button>
+                                    <button type="submit" class="btn btn-lg btn-default"><i
+                                            class="fa fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <label for="razonSocial">Razon Social</label>
+                        <input type="text" id="razonSocial" class="form-control">
+                        <br>
+
+                        <label for="direccionn">Dirección</label>
+                        <div class="input-group input-group-lg">
+                            <input type="text" id="direccionn" class="form-control">
+                            <button type="submit" class="btn btn-lg btn-default"><i class="fa fa-plus"></i></button>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+    <div class="container">
+        <div class="abs-center">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Detalle de la Factura</h3>
+                    </div>
+
+                    <form method="GET" target="print_popup" action="{% url 'buscarDetalle' %}"
+                        onsubmit="window.open('about:blank','print_popup','width=1000,height=800');">
+                        <input class="btn btn-info" type="submit" value=" Agregar Detalle">
+                    </form>
+
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40px">Código Principal</th>
+                                    <th style="width: 40px">Código Auxiliar</th>
+                                    <th>Descripción</th>
+                                    <th>Precio Unitario</th>
+                                    <th>Subsidio</th>
+                                    <th>Precio sin Subsidio</th>
+                                    <th>Descuento</th>
+                                    <th>Valor Total</th>
+                                    <th>Valor ICE</th>
+                                    <th>B.I. IRBPNR</th>
+                                    <th>Valor IRBPNR</th>
+                                    <th style="width: 40px">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+                <!-- /.card -->
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="abs-center">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Forma de Pago</h3>
+                    </div>
+                    <form method="GET" target="print_popup" action="{% url 'formaPago' %}"
+                        onsubmit="window.open('about:blank','print_popup','width=1000,height=800');">
+
+                        <input class="btn btn-info" type="submit" value=" Agregar Detalle">
+
+                    </form>
+
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40px">Codigo</th>
+                                    <th>Descripción</th>
+                                    <th>Total</th>
+                                    <th>Plazo</th>
+                                    <th>Unidad de Tiempo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+                <!-- /.card -->
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <div class="container">
+        <div class="abs-center">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Campo Adicional</h3>
+                    </div>
+                    <form method="GET" target="print_popup" action="{% url 'campoAdicional' %}"
+                        onsubmit="window.open('about:blank','print_popup','width=1000,height=800');">
+
+                        <input class="btn btn-info" type="submit" value=" Agregar Detalle">
+
+                    </form>
+
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Descripción</th>
+                                    <th style="width: 40px">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+                <!-- /.card -->
+            </div>
+
+        </div>
+    </div>
+
+    <input type="submit" class="btn btn-info float-right" value="Guardar">
+    <input type="submit" class="btn btn-default" value="Cancelar">
+    <br>
+</div>
+{% endblock %}
