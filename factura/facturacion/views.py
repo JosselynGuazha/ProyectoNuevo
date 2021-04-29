@@ -4,6 +4,7 @@ from .models import Cliente, ComprobanteGeneral, CampoAdicional, Pagos, Producto
 from .forms import ClienteForm, CampoAdicionalForm, PagosForm
 from django.contrib import messages
 from django.db.models import Q
+from django.core.paginator import Paginator
 
 
 # Create your views here.
@@ -35,22 +36,29 @@ def crearCliente(request):
 
 @login_required
 def buscarCliente(request):
-    context = {}
+    message=''
     identificacionGet = request.GET.get("identificacion")
     tipoIdentificacionGet = request.GET.get("tipoIdentificacion")
+    clientes = Cliente.objects.all().order_by('razonSocial')
 
     if identificacionGet and tipoIdentificacionGet:
         if tipoIdentificacionGet == 'TODOS':
-            cliente = Cliente.objects.get(identificacion = identificacionGet)
-            cont = Cliente.objects.filter(identificacion = identificacionGet).count()
+            clientes = Cliente.objects.filter(identificacion = identificacionGet)
         else:
-            cliente = Cliente.objects.filter(identificacion = identificacionGet, tipoIdentificacion = tipoIdentificacionGet).first()
-            cont = Cliente.objects.filter(identificacion = identificacionGet, tipoIdentificacion = tipoIdentificacionGet).count()
-        if cont == 0:
-            context = {'message' : 'Cliente no existe'}
-        else:
-            context = {'data' : cliente}
-    return render(request, 'buscarCliente.html', context)
+            clientes = Cliente.objects.filter(identificacion = identificacionGet, tipoIdentificacion = tipoIdentificacionGet)
+
+        if clientes.exists() == False:
+            message = 'Cliente no existe'
+
+    paginator = Paginator(clientes, 2)
+    page = request.GET.get('page')
+    clientes = paginator.get_page(page)
+
+    parametros = request.GET.copy()
+    if parametros.get('page') != None:
+        del parametros['page']
+
+    return render(request, 'buscarCliente.html', {'clientes': clientes, 'parametros':parametros, 'message':message})
 
 
 @login_required
@@ -64,7 +72,7 @@ def modificarCliente(request, id):
                 cliente.save()
                 context = {'data' : cliente}
                 messages.success(request, 'Cliente Modificado con Exito')
-                return render(request, 'buscarCliente.html', context)
+                return redirect('buscarCliente')
 
     else:
         form = ClienteForm(instance=cliente)
