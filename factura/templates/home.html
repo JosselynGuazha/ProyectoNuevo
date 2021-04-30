@@ -18,6 +18,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="{% static 'lib/admin/plugins/fontawesome-free/css/all.min.css' %}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{% static 'lib/admin/css/adminlte.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/jquery-confirm-v3.3.4/jquery-confirm.min.css' %}">
 </head>
 
 <body class="hold-transition layout-top-nav">
@@ -37,7 +38,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- ./wrapper -->
 
     <!-- REQUIRED SCRIPTS -->
-
+    
     <!-- jQuery -->
     <script src="{% static 'lib/admin/plugins/jquery/jquery.min.js' %}"></script>
     <!-- Bootstrap 4 -->
@@ -46,6 +47,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="{% static 'lib/admin/js/adminlte.min.js' %}"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="{% static 'lib/admin/js/demo.js' %}"></script>
+
+    <script src="{% static 'lib/jquery-confirm-v3.3.4/jquery-confirm.min.js' %}"></script>
+
+    {% block extrajs %}
+
+    {% endblock %}
+    
 </body>
 
 </html>

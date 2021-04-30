@@ -2,7 +2,7 @@
 {% block content %}
 {% load static %}
 
-<!-- /.card -->
+<!-- Datos del Emisor -->
 <div class="container">
     <div class="container">
 
@@ -114,6 +114,8 @@
         </div>
     </div>
 
+
+    <!-- Identificación del Comprobante -->
     <div class="container">
         <div class="abs-center">
             <div class="row">
@@ -154,60 +156,68 @@
         </div>
     </div>
 
-<div class="card">
-    <div class="content">
-        <div class="container-center">
-            <h6 class="text-center display-4">Datos del Comprador</h6>
-            <form method="GET" action="{% url 'buscarCliente' %}">
-                <div class="row">
-                    <div class="col-md-10 offset-md-1">
-                        <div class="row">
-                            <div class="col-4">
-                                <div class="form-group">
-                                    <label class="form-label" for="tipoIdentificacion">Identificación</label>
-                                    <select name="tipoIdentificacion" class="form-control" id="tipoIdentificacion">
-                                        <option value="05">Cedula</option>
-                                        <option value="06">Pasaporte</option>
-                                        <option value="07">Consumidor Final</option>
-                                        <option value="08">ID Exterior</option>
-                                        <option value="09">Placa</option>
-                                    </select>
+
+    <!-- Datos del Comprador-->
+    <div class="card">
+        <div class="content">
+            <div class="container-center">
+                <h6 class="text-center display-4">Datos del Comprador</h6>
+                <form method="GET" action="{% url 'buscarCliente' %}">
+                    <div class="row">
+                        <div class="col-md-10 offset-md-1">
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label class="form-label" for="tipoIdentificacion">Identificación</label>
+                                        <select name="tipoIdentificacion" class="form-control" id="tipoIdentificacion">
+                                            <option value="05">Cedula</option>
+                                            <option value="06">Pasaporte</option>
+                                            <option value="07">Consumidor Final</option>
+                                            <option value="08">ID Exterior</option>
+                                            <option value="09">Placa</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="identificador">Número de Identificación </label>
+                            <div class="form-group">
+                                <label class="form-label" for="identificador">Número de Identificación </label>
 
+                                <div class="input-group input-group-lg">
+                                    <input type="search" class="form-control form-control-lg" id="identificador"
+                                        name="identificador">
+
+                                    <div class="input-group-append">
+
+                                        <button type="submit" class="btn btn-lg btn-default"><i
+                                                class="fa fa-search"></i></button>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <label for="razonSocial">Razon Social</label>
+                            <input type="text" id="razonSocial" class="form-control">
+                            <br>
+
+                            <label for="direccionn">Dirección</label>
                             <div class="input-group input-group-lg">
-                                <input type="search" class="form-control form-control-lg" id="identificador"
-                                    name="identificador">
-
-                                <div class="input-group-append">
-
-                                    <button type="submit" class="btn btn-lg btn-default"><i
-                                            class="fa fa-search"></i></button>
-                                    <button type="submit" class="btn btn-lg btn-default"><i
-                                            class="fa fa-plus"></i></button>
-                                </div>
+                                <input type="text" id="direccionn" class="form-control">
+                                <button type="submit" class="btn btn-lg btn-default"><i class="fa fa-plus"></i></button>
                             </div>
+                            <br>
                         </div>
-                        <label for="razonSocial">Razon Social</label>
-                        <input type="text" id="razonSocial" class="form-control">
-                        <br>
-
-                        <label for="direccionn">Dirección</label>
-                        <div class="input-group input-group-lg">
-                            <input type="text" id="direccionn" class="form-control">
-                            <button type="submit" class="btn btn-lg btn-default"><i class="fa fa-plus"></i></button>
-                        </div>
-                        <br>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
+    <button onclick="abrir_modal_creacion( 'Cliente.html' )" type="submit"
+                                            class="btn btn-lg btn-default"><i class="fa fa-plus"></i></button>
+    
+    
+    
+<!-- Detalle de la Factura -->
+    
 
     <div class="container">
         <div class="abs-center">
@@ -249,12 +259,14 @@
                     </div>
 
                 </div>
-                <!-- /.card -->
+
             </div>
 
         </div>
     </div>
 
+
+    <!-- Forma de Pago -->
     <div class="container">
         <div class="abs-center">
             <div class="col-md-12">
@@ -289,7 +301,7 @@
                     </div>
 
                 </div>
-                <!-- /.card -->
+
             </div>
 
         </div>
@@ -297,6 +309,7 @@
 
 
 
+    <!-- Campo Adicional -->
     <div class="container">
         <div class="abs-center">
             <div class="col-md-12">
@@ -304,12 +317,17 @@
                     <div class="card-header">
                         <h3 class="card-title">Campo Adicional</h3>
                     </div>
+
                     <form method="GET" target="print_popup" action="{% url 'campoAdicional' %}"
                         onsubmit="window.open('about:blank','print_popup','width=1000,height=800');">
 
-                        <input class="btn btn-info" type="submit" value=" Agregar Detalle">
+                        <input class="btn btn-info" type="submit" data-toggle="modal" data-target="#myModalDetalle"
+                            value=" Agregar Detalle">
 
                     </form>
+
+
+
 
                     <div class="card-body">
                         <table class="table table-bordered">
@@ -338,5 +356,24 @@
     <input type="submit" class="btn btn-info float-right" value="Guardar">
     <input type="submit" class="btn btn-default" value="Cancelar">
     <br>
+
 </div>
+<div class="modal fade" id="clienteCrear" role="dialog">
+
+</div>
+
 {% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+    var $ = jQuery.noConflict();
+    function abrir_modal_creacion(url){
+        $('#clienteCrear').load(url, function(){
+            $(this).modal('show');
+            console.log("Ver este valor");
+        });
+    }
+</script>
+{% endblock %}
+
+

@@ -1,5 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
+from django.views.generic.edit import CreateView, FormView
+from django.urls import reverse_lazy
+from django.urls import reverse
 from .models import Cliente, ComprobanteGeneral, CampoAdicional, Pagos, Producto
 from .forms import ClienteForm, CampoAdicionalForm, PagosForm
 from django.contrib import messages
@@ -11,6 +15,16 @@ from django.core.paginator import Paginator
 
 def inicio(request):
     return render(request, 'index.html', {})
+
+
+
+class clienteCrear(CreateView):
+    model = Cliente
+    template_name = 'Cliente.html'
+    
+    
+
+
 
 @login_required
 def factura(request):
