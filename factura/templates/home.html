@@ -12,6 +12,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <title>Sistema de FActturación</title>
 
     <!-- Google Font: Source Sans Pro -->
+    
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome Icons -->
@@ -19,6 +20,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Theme style -->
     <link rel="stylesheet" href="{% static 'lib/admin/css/adminlte.min.css' %}">
     <link rel="stylesheet" href="{% static 'lib/jquery-confirm-v3.3.4/jquery-confirm.min.css' %}">
+
+    
+
 </head>
 
 <body class="hold-transition layout-top-nav">
@@ -38,7 +42,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- ./wrapper -->
 
     <!-- REQUIRED SCRIPTS -->
-    
+
     <!-- jQuery -->
     <script src="{% static 'lib/admin/plugins/jquery/jquery.min.js' %}"></script>
     <!-- Bootstrap 4 -->
@@ -50,10 +54,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <script src="{% static 'lib/jquery-confirm-v3.3.4/jquery-confirm.min.js' %}"></script>
 
+    <script src="{% static 'lib/django-bootstrap-modal-forms-1.1.0/js/jquery.bootstrap.modal.forms.js' %}"></script>
+    <script src="{% static 'lib/django-bootstrap-modal-forms-1.1.0/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    
     {% block extrajs %}
 
     {% endblock %}
-    
+
 </body>
 
 </html>

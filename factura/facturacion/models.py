@@ -7,6 +7,7 @@ from django.db import models
 #cliente = models.ForeignKey(Cliente,on_delete=models.CASCADE)
 
 #********** Desde Aqui ***********
+
 class Cliente(models.Model):
     razonSocial = models.CharField(verbose_name="Apellidos y Nombres/Razón Social", max_length=100)
     select_tipoIdentificacion = [

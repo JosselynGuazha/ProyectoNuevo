@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'facturacion',
+    'bootstrap_modal_forms',
 ]
 
 MIDDLEWARE = [

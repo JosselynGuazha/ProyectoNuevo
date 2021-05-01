@@ -15,7 +15,8 @@ urlpatterns = [
     path('buscarDetalle/', buscarDetalle, name= "buscarDetalle"),
     path('formaPago/', crear_formaPago, name= "formaPago"),
     path('factura/', factura, name= "factura"),
-    path('clienteCrear/', clienteCrear.as_view(), name= "clienteCrear"),
+   #path('clienteCrear/', clienteCrear.as_view(), name= "clienteCrear"),
+    path('create_cliente/', ClienteCreateView.as_view(), name='create_cliente'),
     
 ]
 

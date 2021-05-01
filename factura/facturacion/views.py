@@ -5,10 +5,12 @@ from django.views.generic.edit import CreateView, FormView
 from django.urls import reverse_lazy
 from django.urls import reverse
 from .models import Cliente, ComprobanteGeneral, CampoAdicional, Pagos, Producto
-from .forms import ClienteForm, CampoAdicionalForm, PagosForm
+from .forms import ClienteForm, CampoAdicionalForm, PagosForm, ClienteForm2
 from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.http import JsonResponse
+from bootstrap_modal_forms.generic import BSModalCreateView
 
 
 # Create your views here.
@@ -17,20 +19,29 @@ def inicio(request):
     return render(request, 'index.html', {})
 
 
-
-class clienteCrear(CreateView):
-    model = Cliente
+class ClienteCreateView(BSModalCreateView):
     template_name = 'Cliente.html'
-    
-    
+    form_class = ClienteForm2
+    success_message = 'Success: Cliente creado con exito'
+    success_url = reverse_lazy('factura')
 
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            print("Ver esto",request.POST)
+            action = request.POST['action']
+            print(action)
+        except Exception as e:
+            data['error'] = str(e)
+            print("Error", str(e))
+        return JsonResponse(data, safe=False)
 
 @login_required
 def factura(request):
     emisor = ComprobanteGeneral.objects.all().first()
-    print("ver este valor", emisor)
-    
 
     return render(request, 'factura.html', {'emisor':emisor})
 
