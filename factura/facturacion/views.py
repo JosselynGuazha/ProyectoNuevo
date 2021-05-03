@@ -1,17 +1,20 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.edit import CreateView, FormView
 from django.urls import reverse_lazy
-from django.urls import reverse
 from .models import Cliente, ComprobanteGeneral, CampoAdicional, Pagos, Producto
 from .forms import ClienteForm, CampoAdicionalForm, PagosForm, ClienteForm2
 from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.http import JsonResponse
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from bootstrap_modal_forms.generic import BSModalCreateView
 
+from django.views.generic import TemplateView
 
 # Create your views here.
 
@@ -19,31 +22,87 @@ def inicio(request):
     return render(request, 'index.html', {})
 
 
-class ClienteCreateView(BSModalCreateView):
-    template_name = 'Cliente.html'
-    form_class = ClienteForm2
-    success_message = 'Success: Cliente creado con exito'
-    success_url = reverse_lazy('factura')
+class FacturaView(TemplateView):
+    template_name = 'factura.html'
 
+    @method_decorator(csrf_exempt)
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         data = {}
         try:
-            print("Ver esto",request.POST)
             action = request.POST['action']
-            print(action)
+            if action == 'addCliente':
+                cli = Cliente()
+                cli.razonSocial = request.POST['razonSocial']
+                cli.tipoIdentificacion = request.POST['tipoIdentificacion']
+                cli.identificacion = request.POST['identificacion']
+                cli.tipoCliente = request.POST['tipoCliente']
+                cli.direccion = request.POST['direccion']
+                cli.telefocnoConvencional = request.POST['telefocnoConvencional']
+                cli.extension = request.POST['extension']
+                cli.telefonoCelular = request.POST['telefonoCelular']
+                cli.correoElectronico = request.POST['correoElectronico']
+                cli.save()
+                data = request.POST
+            elif action == 'add':
+                data = []
+                for i in cliente.objects.all():
+                    data.append(i.toJSON())
+            else:
+                data['error'] = 'Ha ocurrido un error'
         except Exception as e:
             data['error'] = str(e)
-            print("Error", str(e))
+        print("Dato...",data)
         return JsonResponse(data, safe=False)
 
-@login_required
-def factura(request):
-    emisor = ComprobanteGeneral.objects.all().first()
+    def get_context_data(self, **kwargs):
 
-    return render(request, 'factura.html', {'emisor':emisor})
+        context = super().get_context_data(**kwargs)
+        context['emisor'] = ComprobanteGeneral.objects.all().first()
+        #context['list_url'] = reverse_lazy('factura')
+        #context['entity'] = 'Clientes'
+        context['form'] = ClienteForm()
+        return context
+
+
+#class ClienteCreateView(CreateView):
+ #   template_name = 'Cliente.html'
+  #  form_class = ClienteForm
+   # success_message = 'Success: Cliente creado con exito'
+    #success_url = reverse_lazy('factura')
+
+#class ClienteCreateView(CreateView):
+ #   template_name = 'Cliente.html'
+  #  form_class = ClienteForm
+
+#    def post(self, request, *args, **kwargs):
+ #       form = ClienteForm(request.POST)
+  #      if form.is_valid():
+   #         form.save()
+    #        return redirect('factura')
+     #   else:
+      #      form = ClienteForm()
+       # return render(request, 'Cliente.html')
+
+#def crearClienteFactura(request):
+ #   if request.method == "POST":
+  #      form = ClienteForm(request.POST)
+   #     if form.is_valid():
+    #        form.save()
+     #       return redirect('factura')
+    #else:
+     #   form = ClienteForm()
+    #return render(request, 'Cliente.html', {'form': form})
+    
+
+#@login_required
+#def factura(request):
+ #   emisor = ComprobanteGeneral.objects.all().first()
+
+  #  return render(request, 'factura.html', {'emisor':emisor})
 
 
 @login_required
