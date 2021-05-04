@@ -180,32 +180,36 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label" for="identificador">Número de Identificación </label>
+                            <form method="POST" action="." id="formBuscarCliente">
+                                <input name="action" type="hidden" value="buscar">
+                                <div class="form-group">
+                                    <label class="form-label" for="identificador">Número de Identificación </label>
 
-                                <div class="input-group input-group-lg">
-                                    <input type="search" class="form-control form-control-lg" id="identificador"
-                                        name="identificador">
+                                    <div class="input-group input-group-lg">
+                                        <input type="search" class="form-control form-control-lg" id="identificador"
+                                            name="identificador">
 
-                                    <div class="input-group-append">
+                                        <div class="input-group-append">
+                                            <!-- Buscar Client button -->
+                                            <button type="submit" class="btn btn-lg btnBuscarCliente"
+                                                id="buscar-cliente"><i class="fa fa-search"></i></button>
+                                            <!-- Create Client button -->
+                                            <button type="button" name="button" id="create-cliente"
+                                                class="btn btn-lg btnAddCliente"><i class="fa fa-plus"></i></button>
 
-                                        <button type="submit" class="btn btn-lg btn-default"><i
-                                                class="fa fa-search"></i></button>
-                                        <!-- Create Client button -->
-                                        <button type="button" name="button" id="create-cliente"
-                                            class="btn btnAddCliente"><i class="fa fa-plus"></i></button>
-
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </form>
                             <label for="razonSocial">Razon Social</label>
-                            <input type="text" id="razonSocial" class="form-control">
+                            <input type="text" id="razonSocial" name="razonSocial" class="form-control">
                             <br>
 
                             <label for="direccion">Dirección</label>
                             <div class="input-group input-group-lg">
-                                <input type="text" id="direccion" class="form-control">
-                                <button type="submit" class="btn btn-lg btn-default"><i class="fa fa-plus"></i></button>
+                                <input type="text" id="direccion" name="direccion" class="form-control">
+                                <button type="submit" id="modificar-cliente" rel="edit"
+                                    class="btn btn-lg btnModificarCliente"><i class="fa fa-plus"></i></button>
                             </div>
                             <br>
                         </div>
@@ -237,17 +241,14 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
+                                        <th style="width: 40px">Cantidad</th>
                                         <th style="width: 40px">Código Principal</th>
                                         <th style="width: 40px">Código Auxiliar</th>
                                         <th>Descripción</th>
                                         <th>Precio Unitario</th>
-                                        <th>Subsidio</th>
-                                        <th>Precio sin Subsidio</th>
                                         <th>Descuento</th>
+                                        <th>Impuesto</th>
                                         <th>Valor Total</th>
-                                        <th>Valor ICE</th>
-                                        <th>B.I. IRBPNR</th>
-                                        <th>Valor IRBPNR</th>
                                         <th style="width: 40px">Acción</th>
                                     </tr>
                                 </thead>
@@ -406,8 +407,9 @@
             </div>
         </div>
     </div>
-  </form>
-  
+</form>
+
+
 
 <!-- Modal Cliente Modificar-->
 <form method="GET" action="." id="formModificarCliente">
@@ -416,13 +418,13 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Crear Cliente</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Modificar Cliente</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                   <!--
+                    <!--
 <input name="action" type="hidden" value="addCliente">
                     {% for field in form %}
                     <div class="form-group{% if field.errors %} invalid{% endif %}">
@@ -433,7 +435,7 @@
                         {% endfor %}
                     </div>
                     {% endfor %}
-                   --> 
+                   -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -442,6 +444,6 @@
             </div>
         </div>
     </div>
-  </form>
+</form>
 
 {% endblock %}

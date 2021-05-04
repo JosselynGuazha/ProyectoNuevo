@@ -15,6 +15,7 @@ from django.views.decorators.csrf import csrf_exempt
 from bootstrap_modal_forms.generic import BSModalCreateView
 
 from django.views.generic import TemplateView
+from django.http import QueryDict
 
 # Create your views here.
 
@@ -46,26 +47,32 @@ class FacturaView(TemplateView):
                 cli.telefonoCelular = request.POST['telefonoCelular']
                 cli.correoElectronico = request.POST['correoElectronico']
                 cli.save()
+                print("Hola", request.POST)
                 data = request.POST
-            elif action == 'add':
-                data = []
-                for i in cliente.objects.all():
-                    data.append(i.toJSON())
+            elif action == 'buscar':
+                print('Bscando...')
+                identificacionGet = request.POST['identificador']
+                print("Mira",identificacionGet)
+                cliente = Cliente.objects.values().get(identificacion = identificacionGet)
+                print(cliente)
+                data = QueryDict(cliente)
+                print(data)
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:
             data['error'] = str(e)
-        print("Dato...",data)
         return JsonResponse(data, safe=False)
 
-    def get_context_data(self, **kwargs):
 
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['emisor'] = ComprobanteGeneral.objects.all().first()
         #context['list_url'] = reverse_lazy('factura')
         #context['entity'] = 'Clientes'
         context['form'] = ClienteForm()
         return context
+    
+    
 
 
 #class ClienteCreateView(CreateView):

@@ -1,20 +1,32 @@
 
-function getData(data){
-    var identificador = $('#identificador');
+function getData(data) {
     $('input[name="identificador"]').val(data.identificacion);
     $('input[name="razonSocial"]').val(data.razonSocial);
     $('input[name="direccion"]').val(data.direccion);
-    
 
 }
+
 $(function () {
+
+    $('.btnBuscarCliente').on('click', function () {
+        $('input[name="action"]').val('buscar');
+    });
+
 
     $('.btnAddCliente').on('click', function () {
         $('input[name="action"]').val('addCliente');
+        $('#formCrearCliente')[0].reset();
         $('#crearCliente').modal('show');
     });
 
-    $('form').on('submit', function (e) {
+
+    // $('.btnModificarCliente').on('click', function () {
+
+    //   $('#modificarCliente').modal('show');
+    //});
+
+
+    $('#formCrearCliente').on('submit', function (e) {
         e.preventDefault();
         //var parameters = $(this).serializeArray();
         //var parameters = new FormData(this);
@@ -34,15 +46,30 @@ $(function () {
                 console.log('An error occurred.');
                 console.log(data);
             },
-            
-            
         });
-        //submit_with_ajax(window.location.pathname, 'Notificación', '¿Estas seguro de realizar la siguiente acción?', parameters, function () {
-          //  $('#crearCliente').modal('hide');
-            //tblClient.ajax.reload();
-            //getData();
-            //location.reload();
-        //});
     });
 
+    $('#formBuscarCliente').on('submit', function (e) {
+        e.preventDefault();
+
+        var frm = $('#formBuscarCliente');
+        $.ajax({
+            type: frm.attr('method'),
+            url: frm.attr('action'),
+            data: frm.serialize(),
+            success: function (data) {
+                console.log('Submission was successful.');
+                console.log(data);
+                getData(data);
+                console.log(data);
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+            }
+        });
+    });
 });
+
+
+
