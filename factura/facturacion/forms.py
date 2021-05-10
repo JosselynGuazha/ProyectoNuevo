@@ -6,36 +6,18 @@ from bootstrap_modal_forms.forms import BSModalModelForm
 class ClienteForm(forms.ModelForm):
     class Meta:
         model = Cliente
-        fields = ('razonSocial', 'tipoIdentificacion', 'identificacion', 'tipoCliente', 'direccion', 'telefocnoConvencional', 'extension','telefonoCelular','correoElectronico')
+        fields = ('razonSocial', 'tipoIdentificacion', 'identificacion', 'tipoCliente', 'direccion', 'telefonoConvencional', 'extension','telefonoCelular','correoElectronico')
         widgets = {
             'razonSocial': forms.TextInput(attrs={'class': 'form-control'}),
             'tipoIdentificacion': forms.Select(attrs={'class': 'form-control'}),
             'identificacion': forms.TextInput(attrs={'class': 'form-control'}),
             'tipoCliente': forms.Select(attrs={'class': 'form-control'}),
             'direccion': forms.Textarea(attrs={'class': 'form-control','rows':'3'}),
-            'telefocnoConvencional': forms.TextInput(attrs={'class': 'form-control'}),
+            'telefonoConvencional': forms.TextInput(attrs={'class': 'form-control'}),
             'extension': forms.TextInput(attrs={'class': 'form-control'}),
             'telefonoCelular': forms.TextInput(attrs={'class': 'form-control'}),
             'correoElectronico': forms.TextInput(attrs={'class': 'form-control'}),
         }
-
-
-class ClienteForm2(BSModalModelForm):
-    class Meta:
-        model = Cliente
-        fields = ('razonSocial', 'tipoIdentificacion', 'identificacion', 'tipoCliente', 'direccion', 'telefocnoConvencional', 'extension','telefonoCelular','correoElectronico')
-        widgets = {
-            'razonSocial': forms.TextInput(attrs={'class': 'form-control'}),
-            'tipoIdentificacion': forms.Select(attrs={'class': 'form-control'}),
-            'identificacion': forms.TextInput(attrs={'class': 'form-control'}),
-            'tipoCliente': forms.Select(attrs={'class': 'form-control'}),
-            'direccion': forms.Textarea(attrs={'class': 'form-control','rows':'3'}),
-            'telefocnoConvencional': forms.TextInput(attrs={'class': 'form-control'}),
-            'extension': forms.TextInput(attrs={'class': 'form-control'}),
-            'telefonoCelular': forms.TextInput(attrs={'class': 'form-control'}),
-            'correoElectronico': forms.TextInput(attrs={'class': 'form-control'}),
-        }
-
 
 class CampoAdicionalForm(forms.ModelForm):
 

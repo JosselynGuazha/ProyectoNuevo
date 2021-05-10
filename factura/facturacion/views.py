@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.edit import CreateView, FormView
 from django.urls import reverse_lazy
 from .models import Cliente, ComprobanteGeneral, CampoAdicional, Pagos, Producto
-from .forms import ClienteForm, CampoAdicionalForm, PagosForm, ClienteForm2
+from .forms import ClienteForm, CampoAdicionalForm, PagosForm
 from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
@@ -15,7 +15,9 @@ from django.views.decorators.csrf import csrf_exempt
 from bootstrap_modal_forms.generic import BSModalCreateView
 
 from django.views.generic import TemplateView
-from django.http import QueryDict
+from django.http import HttpResponse
+import json
+#from django.http import QueryDictrequest
 
 # Create your views here.
 
@@ -23,56 +25,61 @@ def inicio(request):
     return render(request, 'index.html', {})
 
 
-class FacturaView(TemplateView):
-    template_name = 'factura.html'
+@login_required
+def factura(request):
+    emisor = ComprobanteGeneral.objects.all().first()
+    form = ClienteForm()
+    formulario = PagosForm()
+    return render(request, 'factura.html', {'emisor': emisor, 'form': form, 'formulario': formulario})
 
-    @method_decorator(csrf_exempt)
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        data = {}
-        try:
-            action = request.POST['action']
-            if action == 'addCliente':
-                cli = Cliente()
-                cli.razonSocial = request.POST['razonSocial']
-                cli.tipoIdentificacion = request.POST['tipoIdentificacion']
-                cli.identificacion = request.POST['identificacion']
-                cli.tipoCliente = request.POST['tipoCliente']
-                cli.direccion = request.POST['direccion']
-                cli.telefocnoConvencional = request.POST['telefocnoConvencional']
-                cli.extension = request.POST['extension']
-                cli.telefonoCelular = request.POST['telefonoCelular']
-                cli.correoElectronico = request.POST['correoElectronico']
-                cli.save()
-                print("Hola", request.POST)
-                data = request.POST
-            elif action == 'buscar':
-                print('Bscando...')
-                identificacionGet = request.POST['identificador']
-                print("Mira",identificacionGet)
-                cliente = Cliente.objects.values().get(identificacion = identificacionGet)
-                print(cliente)
-                data = QueryDict(cliente)
-                print(data)
-            else:
-                data['error'] = 'Ha ocurrido un error'
-        except Exception as e:
-            data['error'] = str(e)
-        return JsonResponse(data, safe=False)
+@login_required
+def busquedaCliente(request):
+    identificacionGet = request.GET.get("identificacion")
+    cliente = Cliente.objects.get(identificacion=identificacionGet)
+    cliente = cliente_serializable(cliente)
+    print(cliente)
+    return HttpResponse(json.dumps(cliente), content_type='application/json')
 
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['emisor'] = ComprobanteGeneral.objects.all().first()
-        #context['list_url'] = reverse_lazy('factura')
-        #context['entity'] = 'Clientes'
-        context['form'] = ClienteForm()
-        return context
+def crearClienteModal(request):
+    form = ClienteForm(request.POST)
+    if form.is_valid():
+        cliente = form.save()
+        cliente = cliente_serializable(cliente)
+        return HttpResponse(json.dumps(cliente), content_type='application/json')
+
+
+@login_required
+def modificarClienteModal(request, id):    
+    cliente = get_object_or_404(Cliente, id=id)
+    if request.method == "POST":
+        form = ClienteForm(request.POST, instance=cliente)
+        if form.is_valid():
+            cliente = form.save()
+            cliente = cliente_serializable(cliente)
+            return HttpResponse(json.dumps(cliente), content_type='application/json')
+    else:
+        cliente = cliente_serializable(cliente)
+        print("Form ---- ", cliente)
+        return HttpResponse(json.dumps(cliente), content_type='application/json')
+
+def cliente_serializable(cliente):
+    return {
+        'razonSocial' : cliente.razonSocial,
+        'tipoIdentificacion' : cliente.tipoIdentificacion,
+        'identificacion' : cliente.identificacion,
+        'tipoCliente' : cliente.tipoCliente,
+        'direccion': cliente.direccion,
+        'telefonoConvencional': cliente.telefonoConvencional,
+        'extension': cliente.extension,
+        'telefonoCelular': cliente.telefonoCelular,
+        'correoElectronico': cliente.correoElectronico
+
+    }
+
+
     
-    
+
 
 
 #class ClienteCreateView(CreateView):
@@ -128,6 +135,7 @@ def crearCliente(request):
 @login_required
 def buscarCliente(request):
     message=''
+    print(request.GET)
     identificacionGet = request.GET.get("identificacion")
     tipoIdentificacionGet = request.GET.get("tipoIdentificacion")
     clientes = Cliente.objects.all().order_by('razonSocial')
@@ -155,7 +163,6 @@ def buscarCliente(request):
 @login_required
 def modificarCliente(request, id):    
     cliente = get_object_or_404(Cliente, id=id)
-
     if request.method == "POST":
             form = ClienteForm(request.POST, request.FILES, instance=cliente)
             if form.is_valid():

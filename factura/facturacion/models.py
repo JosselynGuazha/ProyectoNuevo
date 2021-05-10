@@ -25,7 +25,7 @@ class Cliente(models.Model):
     ]
     tipoCliente = models.CharField(verbose_name="Tipo Cliente", max_length=50, choices= select_tipoCliente, default="CLIENTE",)
     direccion = models.TextField(verbose_name="Dirección")
-    telefocnoConvencional =  models.CharField(verbose_name="Teléfono Convencional", max_length=50)
+    telefonoConvencional =  models.CharField(verbose_name="Teléfono Convencional", max_length=50)
     extension = models.CharField(verbose_name="Extensión", max_length=50)
     telefonoCelular = models.CharField(verbose_name="Teléfono Celular", max_length=50)
     correoElectronico = models.EmailField(verbose_name="Correo Electronico", max_length=50)
@@ -172,7 +172,7 @@ class Pagos(models.Model):
         ("ENDOSO DE TITULOS", '21-ENDOSO DE TITULOS'),
     ]
     formaPago = models.CharField(verbose_name="Forma de Pago", max_length=50, choices= select_formaPago, default="SIN_UTILIZACION_FINANCIERA",)
-    total = models.DecimalField(verbose_name="Total", max_digits = 5, decimal_places = 2)
+    total = models.CharField(verbose_name="Total", max_length=50)
     plazo = models.CharField(verbose_name="Plazo", max_length=50)
     select_unidadTiempo = [
         ("NINGUNA", 'Ninguna'),
@@ -311,7 +311,7 @@ class Factura(ComprobanteGeneral):
     identificacionComprador = models.CharField(verbose_name="Identificación del Comprador", max_length=100)
     importeTotal = models.DecimalField(verbose_name="Importe Total", max_digits = 10, decimal_places = 2)
     infoAdicional = models.ManyToManyField(CampoAdicional, verbose_name="Campo Adicional", related_name='campoAdicional') #CampoAdicional --- Relacion UNO a UNO  ver es de uchos  a muchos
-    moneda = models.CharField(verbose_name="Moneda", max_length=50,default="DOLAR")
+    moneda = models.CharField(verbose_name="Moneda", max_length=50, default="DOLAR")
     propina = models.DecimalField(verbose_name="Propina", max_digits = 10, decimal_places = 2)
     razonSocialComprador = models.CharField(verbose_name="Razón social Comprador", max_length=100)
     select_tipoIdentificacionComprador = [
