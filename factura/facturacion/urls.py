@@ -17,6 +17,8 @@ urlpatterns = [
     path('busquedaCliente', busquedaCliente, name= "busquedaCliente"),
     path('crearClienteModal', crearClienteModal, name= "crearClienteModal"),
     path('modificarClienteModal/<int:id>', modificarClienteModal, name= "modificarClienteModal"),
+    path('formaPago', crearFormaPagoModal, name= "formaPago"),
+    path('busquedaProductoModal', busquedaProductoModal, name= "busquedaProductoModal"),
    #path('clienteCrear/', clienteCrear.as_view(), name= "clienteCrear"),
     #path('create_cliente/', ClienteCreateView.as_view(), name='create_cliente'),
 

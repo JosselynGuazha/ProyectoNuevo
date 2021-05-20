@@ -63,8 +63,29 @@ def modificarClienteModal(request, id):
         print("Form ---- ", cliente)
         return HttpResponse(json.dumps(cliente), content_type='application/json')
 
+def crearFormaPagoModal(request):
+    form = PagosForm(request.POST)
+    if form.is_valid():
+        pago = form.save()
+        pago = pago_serializable(pago)
+        return HttpResponse(json.dumps(pago), content_type='application/json')
+
+@login_required
+def busquedaProductoModal(request):
+    codigo = request.GET.get("codProducto")
+    if codigo:
+        productos = Producto.objects.filter(Q(codigoPrincipal = codigo) | Q(codigoAuxiliar = codigo))
+    else: 
+        productos = Producto.objects.all()
+    productos = [ producto_serializable(producto) for producto in productos]
+    return HttpResponse(json.dumps(productos), content_type='application/json')
+#AQUI NOS QUEDAMOS.... HACER CON AJAX AL ABRIR MODAL AL para cargar los productos y hacer la buscquueda y caragr en la tabla Detalle Factura
+
+
+#Form para mantar Data en Forma json
 def cliente_serializable(cliente):
     return {
+        'id': cliente.id,
         'razonSocial' : cliente.razonSocial,
         'tipoIdentificacion' : cliente.tipoIdentificacion,
         'identificacion' : cliente.identificacion,
@@ -74,10 +95,29 @@ def cliente_serializable(cliente):
         'extension': cliente.extension,
         'telefonoCelular': cliente.telefonoCelular,
         'correoElectronico': cliente.correoElectronico
-
     }
 
+def pago_serializable(pago):
+    return {
+        'id': pago.id,
+        'formaPago' : pago.formaPago,
+        'total' : pago.total,
+        'plazo' : pago.plazo,
+        'unidadTiempo' : pago.unidadTiempo,
+    }
 
+def producto_serializable(producto):
+    return {
+        'id': producto.id,
+        'codigoPrincipal' : producto.codigoPrincipal,
+        'codigoAuxiliar' : producto.codigoAuxiliar,
+        'tipoProducto' : producto.tipoProducto,
+        'nombre' : producto.nombre,
+        'precioUnitario' : producto.precioUnitario,
+        'iva' : producto.iva,
+        'ice' : producto.ice,
+        'irbpnr' : producto.irbpnr,
+    }
     
 
 
