@@ -50,12 +50,12 @@ class Producto(models.Model):
     ]
     tipoProducto = models.CharField(verbose_name="Tipo Producto", max_length=10, choices= select_tipoProducto, default="BIEN")
     nombre = models.CharField(verbose_name="Nombre", max_length=100)
-    precioUnitario = models.DecimalField(verbose_name="Precio Unitario", max_digits=10, decimal_places=2)
+    precioUnitario = models.CharField(verbose_name="Precio Unitario", max_length=10)
     select_iva = [
         ("0", '0%'),
-        ("2", 'GRAVA IVA'),
-        ("6", 'NO OBJETO DE IMPUESTO'),
-        ("7", 'EXENTO DE IVA'),
+        ("2", 'GRAVA IVA'), #12%
+        ("6", 'NO OBJETO DE IMPUESTO'), #0%
+        ("7", 'EXENTO DE IVA'), #0%
     ]
     iva=models.CharField(verbose_name="IVA", max_length=1, choices= select_iva, default="0")
     ice=models.CharField(verbose_name="ICE", max_length=50)
@@ -71,7 +71,7 @@ class Producto(models.Model):
 
 class DetalleAdicional(models.Model):
     nombre = models.CharField(verbose_name="Nombre", max_length=50)
-    valor = models.DecimalField(verbose_name="Valor", max_digits = 10, decimal_places = 2)
+    valor = models.CharField(verbose_name="Valor", max_length=10)
 
     def __str__(self):
         return self.nombre + ' ' + str(self.valor)
@@ -90,7 +90,7 @@ class Impuesto(models.Model):
 
 class DetalleFactura(models.Model):
     producto = models.ForeignKey(Producto, verbose_name="Producto", on_delete=models.CASCADE) #Producto --- Relacion de UNO a MUCHOS
-    cantidad = models.CharField(verbose_name="Cantidad", max_length=50)
+    cantidad = models.CharField(verbose_name="Cantidad", max_length=50, default="1")
     codigoAuxiliar = models.CharField(verbose_name="Código Auxiliar", max_length=50)
     codigoPrincipal = models.CharField(verbose_name="Código Principal", max_length=50)
     descuento = models.CharField(verbose_name="Descuento", max_length=50)
@@ -162,14 +162,14 @@ class TotalImpuesto(models.Model):
 
 class Pagos(models.Model):
     select_formaPago = [
-        ("SIN UTILIZACION DEL SISTEMA FINANCIERA", '01-SIN UTILIZACIÓN DEL SISTEMA FINANCIERO'),
-        ("COMPESACION DE DEUDAS", '15-COMPESACIÓN DE DEUDAS'),
-        ("TARJETA DE DEBIDO", '16-TARJETA DE DEBITO'),
-        ("DINERO ELECTRONICO", '17-DINERO ELECTRONICO'),
-        ("TARJETA PREPAGO", '18-TARJETA PREPAGO'),
-        ("TARJETA DE CREDITO", '19-TARJETA DE CREDITO'),
-        ("OTROS CON UTILIZACIÓN DEL SISTEMA FINANCIERO", '20-OTROS CON UTILIZACIÓN DEL SISTEMA FINANCIERO'),
-        ("ENDOSO DE TITULOS", '21-ENDOSO DE TITULOS'),
+        ("01", 'SIN UTILIZACIÓN DEL SISTEMA FINANCIERO'),
+        ("15", 'COMPESACIÓN DE DEUDAS'),
+        ("16", 'TARJETA DE DEBITO'),
+        ("17", 'DINERO ELECTRONICO'),
+        ("18", 'TARJETA PREPAGO'),
+        ("19", 'TARJETA DE CREDITO'),
+        ("20", 'OTROS CON UTILIZACIÓN DEL SISTEMA FINANCIERO'),
+        ("21", 'ENDOSO DE TITULOS'),
     ]
     formaPago = models.CharField(verbose_name="Forma de Pago", max_length=50, choices= select_formaPago, default="SIN_UTILIZACION_FINANCIERA",)
     total = models.CharField(verbose_name="Total", max_length=50)
@@ -309,10 +309,10 @@ class Factura(ComprobanteGeneral):
     detalles = models.ManyToManyField(DetalleFactura, verbose_name="Detalles") #DetalleFactura --- Relacion de UNO a MUCHOS
     #guiaRemision = models.OneToOneField(GuiaRemision, verbose_name="Guía Remisión", on_delete=models.CASCADE) #GuiaRemision --- Relacion de UNO a UNO
     identificacionComprador = models.CharField(verbose_name="Identificación del Comprador", max_length=100)
-    importeTotal = models.DecimalField(verbose_name="Importe Total", max_digits = 10, decimal_places = 2)
+    importeTotal = models.CharField(verbose_name="Importe Total", max_length=50)
     infoAdicional = models.ManyToManyField(CampoAdicional, verbose_name="Campo Adicional", related_name='campoAdicional') #CampoAdicional --- Relacion UNO a UNO  ver es de uchos  a muchos
     moneda = models.CharField(verbose_name="Moneda", max_length=50, default="DOLAR")
-    propina = models.DecimalField(verbose_name="Propina", max_digits = 10, decimal_places = 2)
+    propina = models.CharField(verbose_name="Propina", max_length=50)
     razonSocialComprador = models.CharField(verbose_name="Razón social Comprador", max_length=100)
     select_tipoIdentificacionComprador = [
         ("04", 'RUC'),
@@ -324,8 +324,8 @@ class Factura(ComprobanteGeneral):
     ]
     tipoIdentificacionComprador = models.CharField(verbose_name="Tipo Identificación Comprador", max_length=50, choices = select_tipoIdentificacionComprador, default="07")
     totalConImpuesto = models.OneToOneField(TotalImpuesto, verbose_name="Total con Impuesto", on_delete=models.CASCADE) #TotalImpuesto --- Relacion UNO a UNO
-    totalDescuento = models.DecimalField(verbose_name="Total Descuento", max_digits = 10, decimal_places = 2)
-    totalSinImpuestos = models.OneToOneField(TotalImpuesto,verbose_name="Total Sin Impuesto", related_name='totalImpuesto', on_delete=models.CASCADE) #TotalImpuesto --- Relacion de UNO a UNO
+    totalDescuento = models.CharField(verbose_name="Total Descuento", max_length=10)
+    totalSinImpuestos = models.CharField(verbose_name="Total Sin Impuestos", max_length=10) #TotalImpuesto --- Relacion de UNO a UNO
     pagos = models.ManyToManyField(Pagos, verbose_name="Pagos") #Pagos --- Relacion de UNO a MUCHOS--- Consultar
     direccionComprador = models.TextField(verbose_name="Dirección Comprador")
 
