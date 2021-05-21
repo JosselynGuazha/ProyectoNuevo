@@ -44,14 +44,16 @@ function añadirProducto(data) {
     <td>${data.codigoAuxiliar}</td>
     <td>${data.nombre}</td>
     <td><input style="width: 70px" type="number" value="${data.precioUnitario}" id="precioUnitario_${data.codigoPrincipal}" disabled/></td>
-    <td><input style="width: 70px" type="number" value="0" id="descuento_${data.codigoPrincipal}" onkeyup="actualizarTotal(${data.codigoPrincipal})"/></td>
-    <td><select name="porcentaje">
-    <option value="12" selected>12 %</option>
-    <option value="14" >14 %</option>
-    </select></td>
+    <td><input style="width: 70px" type="number" name="totalDescuento" value="0" id="descuento_${data.codigoPrincipal}" onkeyup="actualizarTotal(${data.codigoPrincipal})"/></td>
+    <td><input style="width: 70px" value="${data.iva}" name="valorIVA" disabled/></td>
+    <td><input style="width: 70px" type="number" value="0.00" name="valorICE" onkeyup="actualizarTotal(${data.codigoPrincipal})"/></td>
+    <td><input style="width: 70px" type="number" value="0.00" name="valorIRBPNR" onkeyup="actualizarTotal(${data.codigoPrincipal})"/></td>
     <td><input style="width: 70px" type="number" name="valorTotal" id="total_${data.codigoPrincipal}" value="${total}" disabled/></td>
+    <td style="display:none;"><input style="width: 70px" type="hidden" value="${data.ice}" name="ICE"/></td>
+    <td style="display:none;"><input style="width: 70px" type="hidden" value="${data.irbpnr}" name="IRBPNR"/></td>
     <td><input type="button" value="Eliminar" onclick="deleteRow(this)"/> </td>`
     calcularValoresTotales();
+
 }
 
 //funcion para el total en Detalle de Factura Tabla
@@ -86,16 +88,51 @@ function cargarTabla(data) {
 //funcion para cargar Totales Detalle de Factura
 function calcularValoresTotales() {
     var subTotalSinImpuesto = 0;
+    var totalDescuento = 0;
+    var subTotal12 = 0;
+    var subTotal0 = 0;
+    var subTotalNoObjetoIVA = 0;
+    var subTotalNoExentoIVA = 0;
+    var total12 = 0;
+    var totalValorICE = 0;
+    var totalValorIRBPNR = 0;
+
     $('#detalleFactura tbody tr').each(function () {
-        console.log("LLegando al EACH");
         var valorTotal = $(this).find('input[name="valorTotal"]').val();
-        console.log(valorTotal);
+        var iva = $(this).find('input[name="valorIVA"]').val();
+        var descuento = $(this).find('input[name="totalDescuento"]').val();
+        var ice = $(this).find('input[name="ICE"]').val();
+        var valorice = $(this).find('input[name="valorICE"]').val();
+        var irbpnr = $(this).find('input[name="IRBPNR"]').val();
+        var valorirbpnr = $(this).find('input[name="valorIRBPNR"]').val();
+
+        totalDescuento = totalDescuento + parseFloat(descuento);
         subTotalSinImpuesto = subTotalSinImpuesto + parseFloat(valorTotal);
+        $(`#totalDescuento`).val(totalDescuento);
         $(`#subTotalSinImpuesto`).val(subTotalSinImpuesto);
-        
-        // var des = JSON.stringify(fila);
-        //alert(des);
+
+        //Comparacion para Valores del iva
+        if (iva == "0") subTotal0 = subTotal0 + parseFloat(valorTotal);
+        if (iva == "2") subTotal12 = subTotal12 + parseFloat(valorTotal);
+        if (iva == "6") subTotalNoObjetoIVA = subTotalNoObjetoIVA + parseFloat(valorTotal);
+        if (iva == "7") subTotalNoExentoIVA = subTotalNoExentoIVA + parseFloat(valorTotal);
+        $(`#subTotal0`).val(subTotal0);
+        $(`#subTotal12`).val(subTotal12);
+        $(`#subTotalNoObjetoIVA`).val(subTotalNoObjetoIVA);
+        $(`#subTotalNoExentoIVA`).val(subTotalNoExentoIVA);
+        //comparacion para valores ICE
+        if (ice != 'null') totalValorICE = totalValorICE + parseFloat(valorice);
+        $(`#valorICE`).val(totalValorICE);
+        //comparacion para valores IRBPNR
+        if (irbpnr != 'null') totalValorIRBPNR = totalValorIRBPNR + parseFloat(valorirbpnr);
+        $(`#valorIRBPNR`).val(totalValorIRBPNR);
+
     });
+
+    total12 = (subTotal12 + totalValorICE) * 0.12;
+    $(`#totalIVA`).val(total12);
+
+
 }
 
 //funcion para cargar el pago en la tabla

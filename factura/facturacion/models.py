@@ -58,12 +58,16 @@ class Producto(models.Model):
         ("7", 'EXENTO DE IVA'), #0%
     ]
     iva=models.CharField(verbose_name="IVA", max_length=1, choices= select_iva, default="0")
-    ice=models.CharField(verbose_name="ICE", max_length=50)
+    select_ice = [
+        ("3011", 'CIGARRILLOS RUBIOS'),
+        ("3021", 'CIGARRILLOS NEGROS'),
+        ("3023", 'PRODUCTOS DEL TABACO....'),
+    ]
+    ice=models.CharField(verbose_name="ICE", max_length=50, choices= select_ice, null = True , blank = True)
     select_irbpnr = [
-        ("", 'Selecione...'),
         ("5001", 'BOTELLAS PLASTICAS NO RETORNABLES'),
     ]
-    irbpnr=models.CharField(verbose_name="IRBPNR", max_length=10, choices= select_irbpnr, default="")
+    irbpnr=models.CharField(verbose_name="IRBPNR", max_length=10, choices= select_irbpnr, null = True, blank = True)
 
     def __str__(self):
         return self.nombre + ' ' + self.codigoPrincipal 
