@@ -98,8 +98,8 @@ class DetalleFactura(models.Model):
     codigoAuxiliar = models.CharField(verbose_name="Código Auxiliar", max_length=50)
     codigoPrincipal = models.CharField(verbose_name="Código Principal", max_length=50)
     descuento = models.CharField(verbose_name="Descuento", max_length=50)
-    detalleAdicional = models.ForeignKey(DetalleAdicional, verbose_name="Detalle Adicional", related_name='Campo_Adicional', on_delete=models.CASCADE) #DetalleAdicional --- Relacion de UNO a MUCHOS
-    impuestos = models.ForeignKey(Impuesto, verbose_name="Impuesto", on_delete=models.CASCADE) #Impuesto --- Relacion de UNO a MUCHOS
+    #detalleAdicional = models.ForeignKey(DetalleAdicional, verbose_name="Detalle Adicional", related_name='Campo_Adicional', on_delete=models.CASCADE, null = True, blank = True) #DetalleAdicional --- Relacion de UNO a MUCHOS
+    impuestos = models.ForeignKey(Impuesto, verbose_name="Impuesto", on_delete=models.CASCADE, null = True, blank = True) #Impuesto --- Relacion de UNO a MUCHOS
     precioTotalSinImpuesto = models.CharField(verbose_name="Precio Total Impuesto", max_length=50)
     precioUnitario = models.CharField(verbose_name="Precio Unitario", max_length=50)
 

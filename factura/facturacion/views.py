@@ -4,8 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.edit import CreateView, FormView
 from django.urls import reverse_lazy
-from .models import Cliente, ComprobanteGeneral, CampoAdicional, Pagos, Producto
-from .forms import ClienteForm, CampoAdicionalForm, PagosForm
+from .models import Cliente, ComprobanteGeneral, CampoAdicional, Pagos, Producto, DetalleFactura
+from .forms import ClienteForm, CampoAdicionalForm, PagosForm, DetalleFacturaForm
 from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
@@ -13,6 +13,7 @@ from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from bootstrap_modal_forms.generic import BSModalCreateView
+from django.views.decorators.csrf import csrf_exempt
 
 from django.views.generic import TemplateView
 from django.http import HttpResponse
@@ -26,11 +27,27 @@ def inicio(request):
 
 
 @login_required
+@csrf_exempt
 def factura(request):
-    emisor = ComprobanteGeneral.objects.all().first()
-    form = ClienteForm()
-    formulario = PagosForm()
-    return render(request, 'factura.html', {'emisor': emisor, 'form': form, 'formulario': formulario})
+    if request.method == "POST":
+        print("Body---> ",request.body)
+        body = json.loads(request.body.decode('utf-8'))
+        arrayDetalles = body.get("arrayDetalles")
+        print("Body---> ", arrayDetalles)
+        #decodeData = json.loads(request.body.decode ('utf-8'))
+        #print("DATA---> ", decodeData)
+        
+        for detalle in arrayDetalles:
+            print("DETALLE", detalle)
+            print(detalle)
+            detalleSave = DetalleFacturaForm(detalle)
+            detalleSave.save()
+    else:
+        emisor = ComprobanteGeneral.objects.all().first()
+        form = ClienteForm()
+        formulario = PagosForm()
+        return render(request, 'factura.html', {'emisor': emisor, 'form': form, 'formulario': formulario})
+
 
 @login_required
 def busquedaCliente(request):
@@ -118,46 +135,6 @@ def producto_serializable(producto):
         'ice' : producto.ice,
         'irbpnr' : producto.irbpnr,
     }
-    
-
-
-
-#class ClienteCreateView(CreateView):
- #   template_name = 'Cliente.html'
-  #  form_class = ClienteForm
-   # success_message = 'Success: Cliente creado con exito'
-    #success_url = reverse_lazy('factura')
-
-#class ClienteCreateView(CreateView):
- #   template_name = 'Cliente.html'
-  #  form_class = ClienteForm
-
-#    def post(self, request, *args, **kwargs):
- #       form = ClienteForm(request.POST)
-  #      if form.is_valid():
-   #         form.save()
-    #        return redirect('factura')
-     #   else:
-      #      form = ClienteForm()
-       # return render(request, 'Cliente.html')
-
-#def crearClienteFactura(request):
- #   if request.method == "POST":
-  #      form = ClienteForm(request.POST)
-   #     if form.is_valid():
-    #        form.save()
-     #       return redirect('factura')
-    #else:
-     #   form = ClienteForm()
-    #return render(request, 'Cliente.html', {'form': form})
-    
-
-#@login_required
-#def factura(request):
- #   emisor = ComprobanteGeneral.objects.all().first()
-
-  #  return render(request, 'factura.html', {'emisor':emisor})
-
 
 @login_required
 def crearCliente(request):

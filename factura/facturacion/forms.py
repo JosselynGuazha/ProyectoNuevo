@@ -42,3 +42,8 @@ class PagosForm(forms.ModelForm):
             'unidadTiempo': forms.Select(attrs={'class': 'form-control'}),
         }
 
+class DetalleFacturaForm(forms.ModelForm):
+
+    class Meta:
+        model = DetalleFactura
+        fields = '__all__'

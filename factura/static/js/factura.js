@@ -39,11 +39,12 @@ function añadirProducto(data) {
     console.log("agrgando....", data);
     var total = data.precioUnitario;
     document.getElementById("bodydetalleFactura").insertRow(-1).innerHTML = `
-    <td><input style="width: 70px"  value="1" type="number" id="cantidad_${data.codigoPrincipal}" onkeyup="actualizarTotal(${data.codigoPrincipal})"/></td>
-    <td>${data.codigoPrincipal}</td>
-    <td>${data.codigoAuxiliar}</td>
-    <td>${data.nombre}</td>
-    <td><input style="width: 70px" type="number" value="${data.precioUnitario}" id="precioUnitario_${data.codigoPrincipal}" disabled/></td>
+    <td style="display:none;"><input style="width: 70px" type="hidden" value="${data.id}" name="idProducto"/></td>
+    <td><input style="width: 70px" value="1" type="number" id="cantidad_${data.codigoPrincipal}" name="cantidadProducto" onkeyup="actualizarTotal(${data.codigoPrincipal})"/></td>
+    <td><input style="width: 70px" name="codigoPrincipalProducto" value="${data.codigoPrincipal}" disabled /></td>
+    <td><input style="width: 70px" name="codigoAuxiliarProducto" value="${data.codigoAuxiliar}" disabled /></td>
+    <td name="nombreProducto">${data.nombre}</td>
+    <td><input style="width: 70px" type="number" value="${data.precioUnitario}" id="precioUnitario_${data.codigoPrincipal}"  name="precioUnitario" disabled/></td>
     <td><input style="width: 70px" type="number" name="totalDescuento" value="0" id="descuento_${data.codigoPrincipal}" onkeyup="actualizarTotal(${data.codigoPrincipal})"/></td>
     <td><input style="width: 70px" value="${data.iva}" name="valorIVA" disabled/></td>
     <td><input style="width: 70px" type="number" value="0.00" name="valorICE" onkeyup="actualizarTotal(${data.codigoPrincipal})"/></td>
@@ -56,6 +57,7 @@ function añadirProducto(data) {
 
 }
 
+
 //funcion para el total en Detalle de Factura Tabla
 function actualizarTotal(codigoPrincipal) {
     var cantidad = $(`#cantidad_${codigoPrincipal}`).val();
@@ -65,6 +67,7 @@ function actualizarTotal(codigoPrincipal) {
     total = (cantidad * precioUnitario) - descuento;
     $(`#total_${codigoPrincipal}`).val(total);
     calcularValoresTotales();
+    checkPropina();
 
 }
 
@@ -97,6 +100,7 @@ function calcularValoresTotales() {
     var totalValorICE = 0;
     var totalValorIRBPNR = 0;
 
+
     $('#detalleFactura tbody tr').each(function () {
         var valorTotal = $(this).find('input[name="valorTotal"]').val();
         var iva = $(this).find('input[name="valorIVA"]').val();
@@ -105,6 +109,7 @@ function calcularValoresTotales() {
         var valorice = $(this).find('input[name="valorICE"]').val();
         var irbpnr = $(this).find('input[name="IRBPNR"]').val();
         var valorirbpnr = $(this).find('input[name="valorIRBPNR"]').val();
+
 
         totalDescuento = totalDescuento + parseFloat(descuento);
         subTotalSinImpuesto = subTotalSinImpuesto + parseFloat(valorTotal);
@@ -127,13 +132,34 @@ function calcularValoresTotales() {
         if (irbpnr != 'null') totalValorIRBPNR = totalValorIRBPNR + parseFloat(valorirbpnr);
         $(`#valorIRBPNR`).val(totalValorIRBPNR);
 
+        
     });
 
     total12 = (subTotal12 + totalValorICE) * 0.12;
-    $(`#totalIVA`).val(total12);
+    $(`#totalIVA`).val(total12.toFixed(2));
 
+    //Valor TOTAL FINAL
+    var total = subTotalSinImpuesto + total12 + totalValorICE + totalValorIRBPNR - totalDescuento;
+    $(`#valorTOTAL`).val(total.toFixed(2));
+
+    //propina
+    $(`#propina10`).val(0);
 
 }
+
+function checkPropina() {
+    var subTotalSinImpuesto = $('input[id="subTotalSinImpuesto"]').val();
+    var valorTotal = $('input[id="valorTOTAL"]').val();
+    var propina = document.getElementById("checkPropina");
+    if (propina.checked == true) {
+        var totalPropina = parseFloat(subTotalSinImpuesto) * 0.10;
+        $(`#propina10`).val(totalPropina.toFixed(2));
+        valorTotal = parseFloat(valorTotal) + totalPropina;
+        $(`#valorTOTAL`).val(valorTotal.toFixed(2));
+    }else{
+        calcularValoresTotales();
+    }
+};
 
 //funcion para cargar el pago en la tabla
 function getPago(data) {
@@ -177,6 +203,7 @@ function cargarFormularioCliente(data) {
     $('input[name="correoElectronico"]').val(data.correoElectronico);
 
 };
+
 
 
 
@@ -338,6 +365,47 @@ $(function () {
                 console.log('An error occurred.');
                 console.log(data);
             }
+        });
+    });
+
+    //Crear Factura
+    $('#guardarFactura').on('click', function (e) {
+        e.preventDefault();
+        console.log("LLegamos a Factura");
+        var arrayDetalles = [];
+        $('#detalleFactura tbody tr').each(function () {
+            arrayDetalles.push({
+                producto: $(this).find('input[name="idProducto"]').val(),
+                cantidad: $(this).find('input[name="cantidadProducto"]').val(),
+                codigoPrincipal: $(this).find('input[name="codigoPrincipalProducto"]').val(),
+                codigoAuxiliar: $(this).find('input[name="codigoAuxiliarProducto"]').val(),
+                descuento: $(this).find('input[name="totalDescuento"]').val(),
+                detalleAdicional: "1",
+                impuestos: "1",
+                //detalleAdicional: $(this).find('input[name="nombreProducto"]').val(),
+                //impuestos: $(this).find('input[name="nombreProducto"]').val(),
+                precioTotalSinImpuesto: $(this).find('input[name="valorTotal"]').val(),
+                precioUnitario: $(this).find('input[name="precioUnitario"]').val(),
+            });
+        });
+        console.log("Ver ARRAY",arrayDetalles);
+        var data = JSON.stringify(({
+            arrayDetalles,
+            nombre: 'Josselyn'
+        }));
+        $.ajax({
+            type: 'POST',
+            url: 'http://127.0.0.1:8000/factura/',
+            contentType: "application/json",
+            data,
+            dataType: 'json',
+            success: function (data) {
+                console.log('¡La factura ha sido guardada con éxito!');
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+            },
         });
     });
 });

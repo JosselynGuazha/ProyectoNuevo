@@ -12,16 +12,12 @@ urlpatterns = [
     path('campoAdicional/', crear_campoAdicional, name= "campoAdicional"),
     path('buscarDetalle/', buscarDetalle, name= "buscarDetalle"),
     path('formaPago/', crear_formaPago, name= "formaPago"),
-    #path('factura/', FacturaView.as_view(), name= "factura"),
     path('factura/', factura, name="factura"),
     path('busquedaCliente', busquedaCliente, name= "busquedaCliente"),
     path('crearClienteModal', crearClienteModal, name= "crearClienteModal"),
     path('modificarClienteModal/<int:id>', modificarClienteModal, name= "modificarClienteModal"),
     path('formaPago', crearFormaPagoModal, name= "formaPago"),
     path('busquedaProductoModal', busquedaProductoModal, name= "busquedaProductoModal"),
-   #path('clienteCrear/', clienteCrear.as_view(), name= "clienteCrear"),
-    #path('create_cliente/', ClienteCreateView.as_view(), name='create_cliente'),
-
     
 ]
 

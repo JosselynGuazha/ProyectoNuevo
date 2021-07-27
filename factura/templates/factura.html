@@ -404,7 +404,8 @@
                     </div>
                 </div>
                 <div class="row">
-                    <label for="propina10" class="col-sm-8">PROPINA 10%: </label>
+                    <label for="propina10" class="col-sm-8">PROPINA 10%: <input type="checkbox" id="checkPropina" onchange="checkPropina()"> </label>
+                    
                     <div class="col-sm-4">
                         <input type="number" readonly class="form-control" id="propina10" value="0.00">
                     </div>
@@ -422,7 +423,7 @@
 </div>
 
 <!-- Botones para guardar Factura -->
-<input type="submit" class="btn btn-info" value="Guardar">
+<input type="submit" class="btn btn-info" id="guardarFactura" value="Guardar">
 <input type="submit" class="btn btn-default" value="Cancelar">
 <br>
 <br>
